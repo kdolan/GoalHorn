@@ -27,6 +27,14 @@ def goal(path):
     write_gpio(GPIO_GOAL_LIGHT, 1) #Turn off goal light
     print(READY_STRING)
 
+def penalty(path):
+	print("Penalty! B-O-X!")
+	write_gpio(GPIO_GOAL_LIGHT, 0) #Turn on goal light
+	subprocess.Popen("aplay -D plughw:0,1 " + path, shell=True)
+	time.sleep(6)
+	write_gpio(GPIO_GOAL_LIGHT, 1) #Turn off goal light
+	print(READY_STRING)
+	
 """
 Returns int value of GPIO.
 1 for high
@@ -50,6 +58,9 @@ def write_gpio(pin, value):
     gpio.close()
 
 if __name__ == "__main__":
+
+
+def oldMain():
 	#INIT
     horn_file = DEFAULT_HORN
     software_only = False
@@ -73,4 +84,3 @@ if __name__ == "__main__":
         elif(softwareTrigger):
             os.remove(TRIGGER_PATH) #Remove trigger file
             goal(horn_file)
-            
