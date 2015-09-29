@@ -1,5 +1,7 @@
 from bottle import route, run, template, request
 from goal_activator import *
+import json
+
 
 AUDIO_ROOT = "/horns/"
 DEFAULT_GOAL_FILE = "rit_horn_short_band.wav"
@@ -7,7 +9,7 @@ DEFAULT_PENALTY_FILE = "penalty.wav"
 
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
-IO_DICT = {"button":[0], "key"=[0],"software_mode"=[0]}
+IO_DICT = {"button":[0], "key":[0],"software_mode":[0]}
 SOURCE_LIST = ["hardware_event", "software_goal", "remote_control"]
 
 """
@@ -55,6 +57,8 @@ def io_handle(io):
 		return "Value error"
 	
 	source = get_source(request)
+    if(source == None)
+        return "Invalid source"
 	if(io not in IO_DICT):
 		return "IO Name Not Found"
 	
@@ -63,14 +67,27 @@ def io_handle(io):
     
 	#Update Value
 	io_obj[0] = value
+    return "100"
 
 @route('/io/get')
 def get_io():
-    return "DATA"
+	source = get_source(request)
+    if(source == None)
+        return "Invalid source"
+    return json.dumps(IO_DICT)
     
 @route('/io/set_all'):
 def set_all_io():
-    return None
+    source = get_source(request)
+    if(source == None)
+        return "Invalid source"    
+    
+    json_data = json.loads(request.forms.get('data'))
+    
+    for key in json_data:
+        IO_DICT[key] = json_data[key]
+    
+    return "100"
 
 if(__name__ == "__main__"):
     run(host='horn.student.rit.edu', port=80, debug=True)
