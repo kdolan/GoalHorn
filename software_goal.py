@@ -1,10 +1,4 @@
-"""from goalbutton import *
-
-horn_file = DEFAULT_HORN
-if(len(sys.argv) == 2):
-    horn_file = sys.argv[1]
-
-goal(horn_file)"""
+import urllib2
 import time
 
 def software_gaol():
@@ -12,11 +6,15 @@ def software_gaol():
     while(True):
         keyvalue = read_single_keypress()
         if(keyvalue == ' '):
-            with open("GOAL.trigger", "w+") as f:
+            """"with open("GOAL.trigger", "w+") as f:
                 f.close()
                 print("   Goal Triggered!!!")
                 time.sleep(1)
-                print("Press space to trigger goal...")
+                print("Press space to trigger goal...")"""
+				print("   Goal Triggered!!!")
+				urllib2.urlopen("http://localhost/goal/"+horn_file).read()
+				time.sleep(1)
+				print("Press space to trigger goal...")
         elif(ord(keyvalue) == 3): #Value for control+C
             return #Exit program
 
