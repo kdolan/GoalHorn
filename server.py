@@ -10,7 +10,7 @@ DEFAULT_PENALTY_FILE = "penalty.wav"
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
 IO_DICT = {"button":[0], "key":[0],"software_mode":[0]}
-SOURCE_LIST = ["hardware_event", "software_goal", "remote_control"]
+SOURCE_LIST = ["hardware", "software_goal", "remote_control"]
 
 """
 Validates that a source is in the source list.
@@ -18,46 +18,49 @@ Returns the source if valid or None if
 invalid
 """
 def get_source(request):
+    source = None
     try:
-        source = request.forms.get('source')
+        source = request.query['source']
         if(source in SOURCE_LIST):
             return source
     finally:
-        return None
-
+        if(source == None):
+            return None
+            
+@route('/goal')
 @route('/goal/<path>')
 def web_goal(path=DEFAULT_GOAL_FILE):
-	source = get_source(request)
+    source = get_source(request)
     
-    if(source == None)
+    if(source == None):
         return "Invalid source"
     
     text = "Goal activated by " + str(source)
-	print(text)
-	goal(path)
+    print(text)
+    goal(AUDIO_ROOT + path)
     return text
 
 @route('/penalty/<path>')
 def web_penalty(path=DEFAULT_PENALTY_FILE):
-	source = get_source(request)
+    source = get_source(request)
     
-    if(source == None)
+    if(source == None):
         return "Invalid source"
     
     text = "Penalty activated by " + str(source)
-	print(text)
-	penalty(AUDIO_ROOT + path)
+    print(text)
+    penalty(AUDIO_ROOT + path)
     return text
     
 @route('/io/set/<io>')
 def io_handle(io):
-	try:
-		value = int(request.forms.get('value'))
-	except:
-		return "Value error"
+    try:
+        value = int(request.forms.get('value'))
+    except Error:
+        return "Value error"
 	
-	source = get_source(request)
-    if(source == None)
+    source = get_source(request)
+    if(source == None):
         return "Invalid source"
 	if(io not in IO_DICT):
 		return "IO Name Not Found"
@@ -65,24 +68,24 @@ def io_handle(io):
     #Get IO Value
     io_obj = IO_DICT[io]
     
-	#Update Value
-	io_obj[0] = value
+    #Update Value
+    io_obj[0] = value
     return "100"
 
 @route('/io/get')
 def get_io():
-	source = get_source(request)
-    if(source == None)
+    source = get_source(request)
+    if(source == None):
         return "Invalid source"
     return json.dumps(IO_DICT)
     
-@route('/io/set_all'):
+@route('/io/set_all')
 def set_all_io():
     source = get_source(request)
-    if(source == None)
+    if(source == None):
         return "Invalid source"    
     
-    json_data = json.loads(request.forms.get('data'))
+    json_data = json.loads(request.query['data'])
     
     for key in json_data:
         IO_DICT[key] = json_data[key]
@@ -90,4 +93,4 @@ def set_all_io():
     return "100"
 
 if(__name__ == "__main__"):
-    run(host='horn.student.rit.edu', port=80, debug=True)
+    run(host='0.0.0.0', port=80, debug=True)
