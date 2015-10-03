@@ -1,6 +1,7 @@
 import urllib2
 import time
 
+
 def software_gaol():
     print("Press space to trigger goal...")
     while(True):

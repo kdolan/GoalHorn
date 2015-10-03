@@ -1,11 +1,7 @@
 from bottle import route, run, template, request
 from goal_activator import *
 import json
-
-
-AUDIO_ROOT = "/horns/"
-DEFAULT_GOAL_FILE = "rit_horn_short_band.wav"
-DEFAULT_PENALTY_FILE = "penalty.wav"
+import constants
 
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
@@ -29,7 +25,7 @@ def get_source(request):
             
 @route('/goal')
 @route('/goal/<path>')
-def web_goal(path=DEFAULT_GOAL_FILE):
+def web_goal(path=constants.DEFAULT_GOAL_FILE):
     source = get_source(request)
     
     if(source == None):
@@ -37,11 +33,12 @@ def web_goal(path=DEFAULT_GOAL_FILE):
     
     text = "Goal activated by " + str(source)
     print(text)
-    goal(AUDIO_ROOT + path)
+    goal(constants.AUDIO_ROOT + path)
     return text
 
+@route('/penalty')
 @route('/penalty/<path>')
-def web_penalty(path=DEFAULT_PENALTY_FILE):
+def web_penalty(path=constants.DEFAULT_PENALTY_FILE):
     source = get_source(request)
     
     if(source == None):
@@ -49,7 +46,7 @@ def web_penalty(path=DEFAULT_PENALTY_FILE):
     
     text = "Penalty activated by " + str(source)
     print(text)
-    penalty(AUDIO_ROOT + path)
+    penalty(constants.AUDIO_ROOT + path)
     return text
     
 @route('/io/set/<io>')

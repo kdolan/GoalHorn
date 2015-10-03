@@ -2,11 +2,7 @@ import time
 import sys
 import os
 import urllib2
-from hardware_interface import *
-
-DEFAULT_HORN = "rit_horn_short_band.wav"
-TRIGGER_PATH = "/horns/scripts/GOAL.trigger"
-READY_STRING = "Waiting for a goal..."
+import constants
 
 """
 GPIO Summary:
@@ -15,33 +11,40 @@ GPIO 27: Key Input
 GPIO 17: Goal light (Active Low) 
 """
 
-GPIO_GOAL_BUTTON = 4
-GPIO_KEY = 27
-
+def setup_gpio():
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(constants.GPIO_GOAL_LIGHT, GPIO.OUT)
+	GPIO.setup(constants.GPIO_GOAL_BUTTON, GPIO.IN)
+	GPIO.setup(constants.GPIO_KEY, GPIO.IN)
+	
+def deactivate_goal_light():
+	GPIO.output(constants.GPIO_GOAL_LIGHT, 1)
+	
 if __name__ == "__main__":
 	#INIT
-    horn_file = DEFAULT_HORN
+	setup_gpio()
+	deactivate_goal_light()
+    horn_file = constants.DEFAULT_HORN
     software_only = False
-    #deactivate_goal_light()
     if(len(sys.argv) == 2):
         horn_file = sys.argv[1]
     if(len(sys.argv) == 3): #path and software only
         horn_file = sys.argv[1]
         software_only = True
-        READY_STRING += " (Software Trigger Only)"
+        rdy_string += constants.READY_STRING + " (Software Trigger Only)"
 	
 	#init local vars
 	button = 0
-	key = read_gpio(GPIO_KEY)
+	key = GPIO.input(constants.GPIO_KEY)
 	#END INIT
-    print(READY_STRING)
+    print(rdy_string)
 	
     while True: 
         #Poll GPIO
-        button = read_gpio(GPIO_GOAL_BUTTON)
-        key = read_gpio(GPIO_KEY)
+        button = GPIO.input(constants.GPIO_GOAL_BUTTON)
+        key = GPIO.input(constants.GPIO_KEY)
         #Check for software trigger
-        softwareTrigger = os.path.isfile(TRIGGER_PATH)
+        softwareTrigger = os.path.isfile( constants.TRIGGER_PATH)
         if((button and key) and not software_only): #pressed and enabled
             print("GOAL!! - Hardware")
             urllib2.urlopen("http://localhost/goal/"+horn_file+"?source=hardware").read() #goal(horn_file)
@@ -50,5 +53,5 @@ if __name__ == "__main__":
             time.sleep(0.1) #Wait before checking input again
         elif(softwareTrigger):
             print("GOAL!! - Software")
-            os.remove(TRIGGER_PATH) #Remove trigger file
+            os.remove(constants.TRIGGER_PATH) #Remove trigger file
             urllib2.urlopen("http://localhost/goal/"+horn_file+"?source=hardware").read() #goal(horn_file)    
