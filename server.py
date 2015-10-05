@@ -2,6 +2,8 @@ from bottle import route, run, template, request
 from goal_activator import *
 import json
 import constants
+import subprocess
+import thread
 
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
@@ -33,7 +35,7 @@ def web_goal(path=constants.DEFAULT_GOAL_FILE):
     
     text = "Goal activated by " + str(source)
     print(text)
-    goal(constants.AUDIO_ROOT + path)
+    thread.start_new_thread(goal, (constants.AUDIO_ROOT + path,))
     return text
 
 @route('/penalty')
@@ -48,6 +50,21 @@ def web_penalty(path=constants.DEFAULT_PENALTY_FILE):
     print(text)
     penalty(constants.AUDIO_ROOT + path)
     return text
+
+@route('/stop')
+@route('/stop/') 
+def stop():
+    source = get_source(request)
+    
+    if(source == None):
+        return "Invalid source"
+    
+    text = "Stopping all active goals " + str(source)
+    print(text)
+    subprocess.Popen("killall aplay", shell=True)
+    deactivate_goal_light()
+    return text
+    
     
 @route('/io/set/<io>')
 def io_handle(io):

@@ -47,8 +47,15 @@ if __name__ == "__main__":
         button = GPIO.input(constants.GPIO_GOAL_BUTTON)
         key = GPIO.input(constants.GPIO_KEY)
         if((button and key) and not software_only): #pressed and enabled
-            print("GOAL!! - Hardware")
-            urllib2.urlopen("http://localhost/goal/"+horn_file+"?source=hardware").read() #goal(horn_file)
+            time.sleep(0.05)
+            #Debounce Inputs
+            button = GPIO.input(constants.GPIO_GOAL_BUTTON)
+            key = GPIO.input(constants.GPIO_KEY)
+            if(button and key):
+                print("GOAL!! - Hardware")
+                urllib2.urlopen("http://localhost/goal/"+horn_file+"?source=hardware").read() #goal(horn_file)
+            else:
+                print("No Goal - Debounced!")
         elif(button):
             print("Button - Key Disabled")
             time.sleep(0.1) #Wait before checking input again

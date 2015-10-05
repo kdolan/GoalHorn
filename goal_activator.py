@@ -19,7 +19,7 @@ def goal(path):
     subprocess.Popen("aplay -D plughw:0,1 " + path, shell=True)
     time.sleep(11.75)
     GPIO.output(constants.GPIO_GOAL_LIGHT, 1) #Turn off goal light
-    print(constants.READY_STRING)
+    print("Goal Finished")
 
 def penalty(path):
     print("Penalty! B-O-X!")
@@ -27,4 +27,4 @@ def penalty(path):
     subprocess.Popen("aplay -D plughw:0,1 " + path, shell=True)
     time.sleep(8.5)
     GPIO.output(constants.GPIO_GOAL_LIGHT, 1) #Turn off goal light
-    print(constants.READY_STRING)
+    print("Penalty Finished")
