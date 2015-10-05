@@ -4,7 +4,6 @@ import os
 import urllib2
 import constants
 import RPi.GPIO as GPIO
-
 """
 GPIO Summary:
 GPIO 4: Button Input
@@ -42,20 +41,37 @@ if __name__ == "__main__":
     #END INIT
     print(rdy_string)
     
+    goal_stopped = False #Variable to indicate if the goal has been stopped
+    
     while True: 
         #Poll GPIO
         button = GPIO.input(constants.GPIO_GOAL_BUTTON)
         key = GPIO.input(constants.GPIO_KEY)
+        goal_time = 0
         if((button and key) and not software_only): #pressed and enabled
             time.sleep(0.05)
             #Debounce Inputs
             button = GPIO.input(constants.GPIO_GOAL_BUTTON)
-            key = GPIO.input(constants.GPIO_KEY)
+            key = GPIO.input(constants.GPIO_KEY)  
             if(button and key):
-                print("GOAL!! - Hardware")
-                urllib2.urlopen("http://localhost/goal/"+horn_file+"?source=hardware").read() #goal(horn_file)
+                if((time.time() - goal_time) > 10):
+                    goal_time = time.time()
+                    print("GOAL!! - Hardware")
+                    urllib2.urlopen("http://localhost/goal/"+horn_file+"?source=hardware").read() #goal(horn_file)
+                    goal_stopped = False #Set flag for goal in progress
+                else:
+                    print(time.time() - goal_time)
+                    print("Goal already triggered")
             else:
                 print("No Goal - Debounced!")
         elif(button):
             print("Button - Key Disabled")
             time.sleep(0.1) #Wait before checking input again
+        elif(not key and (time.time() - goal_time) > 10 and not goal_stopped):
+            #Debounce Inputs
+            time.sleep(0.05)
+            key = GPIO.input(constants.GPIO_KEY)
+            if(not key):
+                print("STOP GOAL!")
+                urllib2.urlopen("http://localhost/stop?"+"source=hardware").read()
+                goal_stopped = True #Set flag for stopped goal to not trigger multiple stops
