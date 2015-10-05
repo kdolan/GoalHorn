@@ -1,6 +1,6 @@
 import urllib2
 import time
-
+import constants
 
 def software_gaol():
     print("Press space to trigger goal...")
@@ -8,14 +8,14 @@ def software_gaol():
         keyvalue = read_single_keypress()
         if(keyvalue == ' '):
             """"with open("GOAL.trigger", "w+") as f:
-                f.close()
-                print("   Goal Triggered!!!")
-                time.sleep(1)
-                print("Press space to trigger goal...")"""
-				print("   Goal Triggered!!!")
-				urllib2.urlopen("http://localhost/goal/"+horn_file).read()
-				time.sleep(1)
-				print("Press space to trigger goal...")
+            f.close()
+            print("   Goal Triggered!!!")
+            time.sleep(1)
+            print("Press space to trigger goal...")"""
+            print("   Goal Triggered!!!")
+            urllib2.urlopen("http://localhost/goal/"+constants.DEFAULT_HORN+"?source=software").read()
+            time.sleep(1)
+            print("Press space to trigger goal...")
         elif(ord(keyvalue) == 3): #Value for control+C
             return #Exit program
 

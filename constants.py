@@ -6,8 +6,7 @@ GPIO_KEY = 27
 #Paths
 READY_STRING = "Action completed"
 DEFAULT_HORN = "rit_horn_short_band.wav"
-TRIGGER_PATH = "/horns/scripts/GOAL.trigger"
 READY_STRING = "Waiting for a goal..."
-AUDIO_ROOT = "/horns/"
+AUDIO_ROOT = "/horn/"
 DEFAULT_GOAL_FILE = "rit_horn_short_band.wav"
 DEFAULT_PENALTY_FILE = "penalty.wav"

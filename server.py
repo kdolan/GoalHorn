@@ -6,7 +6,7 @@ import constants
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
 IO_DICT = {"button":[0], "key":[0],"software_mode":[0]}
-SOURCE_LIST = ["hardware", "software_goal", "remote_control"]
+SOURCE_LIST = ["hardware", "software", "remote_control"]
 
 """
 Validates that a source is in the source list.
