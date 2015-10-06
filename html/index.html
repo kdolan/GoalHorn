@@ -26,6 +26,7 @@
     font-size: 50px;
     border-radius: 8px;
     margin-top: 25px;
+	margin-bottom: 5px;
     }
     
     .btn-x2 {
@@ -33,7 +34,7 @@
     height: 75px;
     font-size: 40px;
     border-radius: 8px;
-    margin-top: 25px;
+    margin-top: 20px;
     }
     
     .btn-x3 {
@@ -100,11 +101,33 @@
         </div>
 		<div class="row">
             <div class="col-lg-6 text-center">
-                <button type="button" class="btn btn-primary btn-xl" onclick="loadurl('http://horn.student.rit.edu/goal?source=web_dash')">Home Goal</button>
+                <button type="button" class="btn btn-primary btn-xl" onclick="hometeam()">Home Goal</button>
+				Home Team: <select id="homewav">
+				  <option value="NCAA+RIT+rit_horn_short_band.wav">RIT Long</option>	
+				  <option value="NCAA+RIT+rit_horn_long_band.wav">RIT Long</option>	
+				  <option value="NHL+Anaheim_Ducks+Anaheim_Ducks_Short.wav">Anaheim Ducks</option>
+				  <option value="NHL+Arizona_Coyotes+Arizona_Coyotes_Short.wav">Arizona Coyotes</option>
+				  <option value="NHL+Boston_Bruins+Boston_Bruins_Short.wav">Boston Bruins</option>
+				  <option value="NHL+Buffalo_Sabers+Buffalo_Sabers_Short.wav">Buffalo Sabers</option>
+				  <option value="NHL+Calgary_Flames+Calgary_Flames_Short.wav">Calgary Flames</option>
+				  <option value="NHL+Carolina_Hurricanes+Carolina_Hurricanes_Short.wav">Carolina Hurricanes</option>
+				  <option value="NHL+Chicago_Blackhawks+Chicago_Blackhawks_Short.wav">Chicago Blackhawks</option>
+				</select>
             </div>
 			<div class="col-lg-6 text-center">
-                <button type="button" class="btn btn-info btn-xl" onclick="loadurl('http://horn.student.rit.edu/goal/NHL+Boston_Bruins+Boston_Bruins_Short.wav?source=web_dash')")
+                <button type="button" class="btn btn-info btn-xl" onclick="awayteam()")
                 >Away Goal</button>
+				Away Team: <select id="awaywav">
+				  <option value="NCAA+RIT+rit_horn_short_band.wav">RIT Long</option>	
+				  <option value="NCAA+RIT+rit_horn_long_band.wav">RIT Long</option>	
+				  <option value="NHL+Anaheim_Ducks+Anaheim_Ducks_Short.wav">Anaheim Ducks</option>
+				  <option value="NHL+Arizona_Coyotes+Arizona_Coyotes_Short.wav">Arizona Coyotes</option>
+				  <option value="NHL+Boston_Bruins+Boston_Bruins_Short.wav">Boston Bruins</option>
+				  <option value="NHL+Buffalo_Sabers+Buffalo_Sabers_Short.wav">Buffalo Sabers</option>
+				  <option value="NHL+Calgary_Flames+Calgary_Flames_Short.wav">Calgary Flames</option>
+				  <option value="NHL+Carolina_Hurricanes+Carolina_Hurricanes_Short.wav">Carolina Hurricanes</option>
+				  <option value="NHL+Chicago_Blackhawks+Chicago_Blackhawks_Short.wav">Chicago Blackhawks</option>
+				</select>
             </div>
         </div>
 		<div class="row">
@@ -134,6 +157,22 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script>
+	function hometeam()
+	{
+		var e = document.getElementById("homewav");
+		var wav = e.options[e.selectedIndex].value;
+		var url = 'http://horn.student.rit.edu/goal/'+ wav + '?source=web_dash';
+		loadurl(url);
+	}
+	
+	function awayteam()
+	{
+		var e = document.getElementById("awaywav");
+		var wav = e.options[e.selectedIndex].value;
+		var url = 'http://horn.student.rit.edu/goal/'+ wav + '?source=web_dash';
+		loadurl(url);
+	}
+	loadurl
     function loadurl(url) {
         document.getElementById('myIframe').src = url;
     }
