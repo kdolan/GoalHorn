@@ -5,8 +5,8 @@ GPIO_KEY = 27
 
 #Paths
 READY_STRING = "Action completed"
-DEFAULT_HORN = "rit_horn_short_band.wav"
+DEFAULT_HORN = "NCAA+RIT+rit_horn_short_band.wav"
 READY_STRING = "Waiting for a goal..."
-AUDIO_ROOT = "/horn/"
-DEFAULT_GOAL_FILE = "rit_horn_short_band.wav"
+AUDIO_ROOT = "/horn/audio/"
+DEFAULT_GOAL_FILE = "NCAA+RIT+rit_horn_short_band.wav"
 DEFAULT_PENALTY_FILE = "penalty.wav"

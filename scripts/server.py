@@ -8,7 +8,10 @@ import thread
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
 IO_DICT = {"button":[0], "key":[0],"software_mode":[0]}
-SOURCE_LIST = ["hardware", "software", "remote_control"]
+SOURCE_LIST = ["hardware", "software", "remote_control", "web_dash"]
+
+def format_path(urlPath):
+    return urlPath.replace("+","/")
 
 """
 Validates that a source is in the source list.
@@ -35,7 +38,7 @@ def web_goal(path=constants.DEFAULT_GOAL_FILE):
     
     text = "Goal activated by " + str(source)
     print(text)
-    thread.start_new_thread(goal, (constants.AUDIO_ROOT + path,))
+    thread.start_new_thread(goal, (constants.AUDIO_ROOT + format_path(path),))
     return text
 
 @route('/penalty')
@@ -48,7 +51,7 @@ def web_penalty(path=constants.DEFAULT_PENALTY_FILE):
     
     text = "Penalty activated by " + str(source)
     print(text)
-    penalty(constants.AUDIO_ROOT + path)
+    thread.start_new_thread(penalty, (constants.AUDIO_ROOT + format_path(path),))
     return text
 
 @route('/stop')
