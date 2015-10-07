@@ -3,12 +3,15 @@ from goal_activator import *
 import json
 import constants
 import subprocess
-import thread
+import threading
 
 #IO Dict that tracks all IO names, states, and permissions
 #Lists to maintain memory reference to value in dict
 IO_DICT = {"button":[0], "key":[0],"software_mode":[0]}
-SOURCE_LIST = ["hardware", "software", "remote_control", "web_dash"]
+SOURCE_LIST = ["hardware", "software", "remote_control", "web_dash", "localhost"]
+
+#Most recent thread
+last_goal_id = 0
 
 def format_path(urlPath):
     return urlPath.replace("+","/")
@@ -38,7 +41,10 @@ def web_goal(path=constants.DEFAULT_GOAL_FILE):
     
     text = "Goal activated by " + str(source)
     print(text)
-    thread.start_new_thread(goal, (constants.AUDIO_ROOT + format_path(path),))
+	
+	last_goal_id++
+	thread.start_new_thread(goal, (constants.AUDIO_ROOT + path,))
+	
     return text
 
 @route('/penalty')
@@ -51,7 +57,10 @@ def web_penalty(path=constants.DEFAULT_PENALTY_FILE):
     
     text = "Penalty activated by " + str(source)
     print(text)
-    thread.start_new_thread(penalty, (constants.AUDIO_ROOT + format_path(path),))
+	
+	goal_id_count++
+	thread.start_new_thread(goal,(constants.AUDIO_ROOT + format_path(path),goal_id_count))
+	
     return text
 
 @route('/stop')
@@ -64,10 +73,27 @@ def stop():
     
     text = "Stopping all active goals " + str(source)
     print(text)
-    subprocess.Popen("killall aplay", shell=True)
-    deactivate_goal_light()
+    """"subprocess.Popen("killall aplay", shell=True)
+    deactivate_goal_light()"""
+	for t in thread_list:
+		t.stop()
     return text
+	
+@route('/finish/<id>')
+def finish_goal(id):
+	source = get_source(request)
     
+    if(source == None):
+        return "Invalid source"
+		
+	if(id == last_goal_id):
+		#Stop turn off the light
+		text = "Disabling goal light for" + id
+		deactivate_goal_light()
+	else:
+		text = "Goal id " + id + " no longer active. Ignore light disable"
+	print(text)
+	return text
     
 @route('/io/set/<io>')
 def io_handle(io):
