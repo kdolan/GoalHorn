@@ -19,7 +19,7 @@ def goal(path, id):
     time.sleep(0.25)
     subprocess.Popen("aplay -D plughw:0,1 " + path, shell=True)
     time.sleep(11.75)
-	urllib2.urlopen("http://localhost/finish/"+id+"?"+"source=finish").read()
+    urllib2.urlopen("http://localhost/finish/"+str(id)+"?"+"source=localhost").read()
     print("Goal Finished")
 
 def penalty(path, id):
@@ -27,5 +27,5 @@ def penalty(path, id):
     GPIO.output(constants.GPIO_GOAL_LIGHT, 0) #Turn on goal light
     subprocess.Popen("aplay -D plughw:0,1 " + path, shell=True)
     time.sleep(8.5)
-    urllib2.urlopen("http://localhost/finish/"+id+"?"+"source=finish").read()
+    urllib2.urlopen("http://localhost/finish/"+str(id)+"?"+"source=localhost").read()
     print("Penalty Finished")
